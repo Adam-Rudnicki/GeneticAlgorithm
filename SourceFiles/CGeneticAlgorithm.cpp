@@ -23,10 +23,10 @@ void CGeneticAlgorithm::vRunIteration() {
 }
 
 void CGeneticAlgorithm::vInitializePopulation() {
-    vpc_population.resize(i_population_size);
+    vpc_population.reserve(i_population_size);
 
     for (int i = 0; i < i_population_size; i++) {
-        vpc_population[i] = pcCreateIndividual();
+        vpc_population.push_back(pcCreateIndividual());
     }
 
     vEvaluatePopulation();
@@ -52,7 +52,7 @@ void CGeneticAlgorithm::vCrossPopulation() {
     vector<CIndividual *> vpc_newPopulation;
     vpc_newPopulation.reserve(i_population_size);
 
-    while (vpc_newPopulation.size() < vpc_population.size()) { //todo odd number vpc_population 333
+    while (vpc_newPopulation.size() < vpc_population.size()) {
         // Select two individuals from the vpc_population
         CIndividual *pc_individual1 = c_selection.pcSelectIndividual(vpc_population);
         CIndividual *pc_individual2 = c_selection.pcSelectIndividual(vpc_population);
@@ -65,6 +65,9 @@ void CGeneticAlgorithm::vCrossPopulation() {
         } else {
             vpc_newPopulation.push_back(new CIndividual(*pc_individual1));
             vpc_newPopulation.push_back(new CIndividual(*pc_individual2));
+        }
+        if (vpc_newPopulation.size() + 1 == vpc_population.size()){
+            vpc_newPopulation.push_back(pcCreateIndividual());
         }
     }
 
